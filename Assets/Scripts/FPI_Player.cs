@@ -16,6 +16,7 @@ public class FPI_Player : MonoBehaviour
     public GameObject raycastStart;
 
     private UnityStandardAssets.Characters.ThirdPerson.ThirdPersonUserControl thirdPersonUserControl;
+    private Transform currentNPC;
 
     void Start()
     {
@@ -31,6 +32,11 @@ public class FPI_Player : MonoBehaviour
         if (!VD.isActive && !thirdPersonUserControl.CanMove)
         {
             thirdPersonUserControl.CanMove = true;
+            if (currentNPC != null)
+            {
+                currentNPC.GetComponent<FPI_InteractableNPC>().DialogueEnd();
+                currentNPC = null;
+            }
         }
         else if (VD.isActive && thirdPersonUserControl.CanMove)
         {
@@ -57,8 +63,7 @@ public class FPI_Player : MonoBehaviour
     void TryInteract()
     {
         RaycastHit rHit;
-
-        Debug.DrawLine(raycastStart.transform.position, raycastStart.transform.forward, Color.red);
+        
         if (Physics.Raycast(raycastStart.transform.position, raycastStart.transform.forward, out rHit, 2))
         {
             //In this example, we will try to interact with any collider the raycast finds
@@ -67,7 +72,6 @@ public class FPI_Player : MonoBehaviour
             VIDE_Assign assigned;
             if (rHit.collider.GetComponent<VIDE_Assign>() != null)
             {
-                Debug.Log("Hit! " + DateTime.Now.ToShortTimeString());
                 assigned = rHit.collider.GetComponent<VIDE_Assign>();
             }
             else return;
@@ -82,6 +86,8 @@ public class FPI_Player : MonoBehaviour
                 }
                 else
                 {
+                    currentNPC = assigned.transform;
+                    currentNPC.GetComponent<FPI_InteractableNPC>().DialogueStart(transform);
                     diagUI.Begin(assigned);
                 }
             }
