@@ -2,6 +2,7 @@
 using System.Collections;
 using VIDE_Data;
 using System;
+using DG.Tweening;
 
 [RequireComponent(typeof(UnityStandardAssets.Characters.ThirdPerson.ThirdPersonUserControl))]
 public class FPI_Player : MonoBehaviour
@@ -88,6 +89,7 @@ public class FPI_Player : MonoBehaviour
                 {
                     currentNPC = assigned.transform;
                     currentNPC.GetComponent<FPI_InteractableNPC>().DialogueStart(transform);
+                    transform.DOLookAt(new Vector3(currentNPC.position.x, transform.position.y, currentNPC.position.z), .5f);
                     diagUI.Begin(assigned);
                 }
             }

@@ -34,7 +34,7 @@ public class FPI_InteractableNPC : MonoBehaviour {
 
         thisAICharacterControl.SetTarget(transform);
 
-        transform.DOLookAt(playerTransform.position, .5f);
+        transform.DOLookAt(new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z), .5f);
     }
 
     public void DialogueEnd()
