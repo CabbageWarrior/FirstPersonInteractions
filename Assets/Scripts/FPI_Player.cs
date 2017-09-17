@@ -19,6 +19,8 @@ public class FPI_Player : MonoBehaviour
     private UnityStandardAssets.Characters.ThirdPerson.ThirdPersonUserControl thirdPersonUserControl;
     private Transform currentNPC;
 
+    private FPI_InteractableNPC firstNPCInLineOfSight;
+
     void Start()
     {
         Cursor.visible = false;
@@ -60,11 +62,38 @@ public class FPI_Player : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        RaycastHit rHit;
+        FPI_InteractableNPC hitNPC;
+
+        if (Physics.Raycast(raycastStart.transform.position, raycastStart.transform.forward, out rHit, 2))
+        {
+            hitNPC = rHit.collider.GetComponent<FPI_InteractableNPC>();
+            if (hitNPC != null)
+            {
+                if (firstNPCInLineOfSight != null)
+                {
+                    firstNPCInLineOfSight.IsTarget = false;
+                }
+                firstNPCInLineOfSight = hitNPC;
+                firstNPCInLineOfSight.IsTarget = true;
+                return;
+            }
+        }
+
+        if (firstNPCInLineOfSight != null)
+        {
+            firstNPCInLineOfSight.IsTarget = false;
+            firstNPCInLineOfSight = null;
+        }
+    }
+
     //Casts a ray to see if we hit an NPC and, if so, we interact
     void TryInteract()
     {
         RaycastHit rHit;
-        
+
         if (Physics.Raycast(raycastStart.transform.position, raycastStart.transform.forward, out rHit, 2))
         {
             //In this example, we will try to interact with any collider the raycast finds

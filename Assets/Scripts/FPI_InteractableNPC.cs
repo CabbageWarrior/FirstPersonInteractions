@@ -6,16 +6,45 @@ using UnityStandardAssets.Characters.ThirdPerson;
 using DG.Tweening;
 
 [RequireComponent(typeof(AICharacterControl))]
-public class FPI_InteractableNPC : MonoBehaviour {
+public class FPI_InteractableNPC : MonoBehaviour
+{
     private AICharacterControl thisAICharacterControl;
     private NavMeshAgent thisNavMeshAgent;
     private Transform previousTarget;
     private Vector3 previousEulerAngles;
+    private GameObject strSpeak;
+
+    private bool isTarget = false;
+
+    public bool IsTarget
+    {
+        get
+        {
+            return isTarget;
+        }
+
+        set
+        {
+            isTarget = value;
+        }
+    }
 
     private void Start()
     {
         thisAICharacterControl = GetComponent<AICharacterControl>();
         thisNavMeshAgent = GetComponent<NavMeshAgent>();
+
+        transform.Find("BillboardElements").Find("Name").GetComponent<TextMesh>().text = GetComponent<VIDE_Assign>().alias;
+
+        strSpeak = transform.Find("BillboardElements").Find("StrSpeak").gameObject;
+    }
+
+    private void Update()
+    {
+        if (isTarget && !strSpeak.activeInHierarchy)
+            strSpeak.SetActive(true);
+        else if (!isTarget && strSpeak.activeInHierarchy)
+            strSpeak.SetActive(false);
     }
 
     public void DialogueStart(Transform playerTransform)
