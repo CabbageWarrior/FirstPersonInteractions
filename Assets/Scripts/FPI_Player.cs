@@ -19,7 +19,7 @@ public class FPI_Player : MonoBehaviour
     private UnityStandardAssets.Characters.ThirdPerson.ThirdPersonUserControl thirdPersonUserControl;
     private Transform currentNPC;
 
-    private FPI_InteractableNPC firstNPCInLineOfSight;
+    private FPI_InteractableObject firstObjectInLineOfSight;
 
     void Start()
     {
@@ -65,27 +65,29 @@ public class FPI_Player : MonoBehaviour
     private void FixedUpdate()
     {
         RaycastHit rHit;
-        FPI_InteractableNPC hitNPC;
+        FPI_InteractableObject hitNPC;
 
         if (Physics.Raycast(raycastStart.transform.position, raycastStart.transform.forward, out rHit, 2))
         {
             hitNPC = rHit.collider.GetComponent<FPI_InteractableNPC>();
+            if (hitNPC == null)
+                hitNPC = rHit.collider.GetComponent<FPI_InteractableObject>();
             if (hitNPC != null)
             {
-                if (firstNPCInLineOfSight != null)
+                if (firstObjectInLineOfSight != null)
                 {
-                    firstNPCInLineOfSight.IsTarget = false;
+                    firstObjectInLineOfSight.IsTarget = false;
                 }
-                firstNPCInLineOfSight = hitNPC;
-                firstNPCInLineOfSight.IsTarget = true;
+                firstObjectInLineOfSight = hitNPC;
+                firstObjectInLineOfSight.IsTarget = true;
                 return;
             }
         }
 
-        if (firstNPCInLineOfSight != null)
+        if (firstObjectInLineOfSight != null)
         {
-            firstNPCInLineOfSight.IsTarget = false;
-            firstNPCInLineOfSight = null;
+            firstObjectInLineOfSight.IsTarget = false;
+            firstObjectInLineOfSight = null;
         }
     }
 
